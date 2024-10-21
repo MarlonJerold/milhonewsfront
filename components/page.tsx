@@ -97,7 +97,7 @@ export function Page() {
     const fetchPosts = async () => {
       try {
         setLoading(true)
-        const response = await fetch('https://milharal-news-production.up.railway.app/service/RelevantPotopsts')
+        const response = await fetch('https://milharal-news.onrender.com/service/RelevantPotopsts')
         const data = await response.json()
         setPosts(data)
       } catch (error) {
