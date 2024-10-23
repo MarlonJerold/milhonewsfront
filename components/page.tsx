@@ -136,7 +136,7 @@ function Summary() {
         const data: SummaryData = await response.json();
         const subtopics = data.summary.split('**').reduce((acc, curr, index, array) => {
           if (index % 2 !== 0) {
-            acc.push({ title: curr.trim(), content: array[index + 1]?.trim() || '' });
+            acc.push({ title: curr.tr(), content: array[index + 1]?.tr() || '' });
           }
           return acc;
         }, [] as { title: string, content: string }[]);
@@ -196,7 +196,6 @@ export function Page() {
       <header className="bg-white border-b border-amber-200 p-4 shadow-sm">
         <div className="container mx-auto flex justify-between items-center">
           <Link href="/" className="text-2xl font-bold flex items-center">
-            <Image src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/176400544-fel2RpdX4Aa1vGTUCNYHJEz03Y5LpG.png" alt="Milho News Logo" className="h-10 mr-2" width={40} height={40} />
             <span className="text-amber-600">Milho</span>
             <span className="text-gray-700">News</span>
           </Link>
