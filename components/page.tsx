@@ -8,6 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { MessageCircle, Heart, Share2 } from 'lucide-react';
 import { Skeleton } from "@/components/ui/skeleton";
 
+
 interface Author {
   did: string;
   handle: string;
@@ -30,16 +31,18 @@ interface NewsPost {
 }
 
 function NewsPost({ author, record, replyCount, repostCount, likeCount, uri }: NewsPost) {
-  const id = uri.split('/').pop();
+  const id = uri.split('/').pop()
   const url = `https://bsky.app/profile/${author.handle}/post/${id}`;
-  
+  const profileUrl = `https://bsky.app/profile/${author.handle}`;
   return (
     <Card className="mb-6 hover:bg-amber-50 transition-colors duration-200 border-amber-200">
       <CardContent className="pt-4">
         <div className="flex flex-col md:flex-row items-start space-x-0 md:space-x-4">
           <Avatar className="mb-2 md:mb-0">
-            <AvatarImage src={author.avatar} />
-            <AvatarFallback>{author.displayName[0]}</AvatarFallback>
+            <Link href={profileUrl} className="cursor-pointer">
+              <AvatarImage src={author.avatar} />
+              <AvatarFallback>{author.displayName[0]}</AvatarFallback>
+            </Link>
           </Avatar>
           <div className="flex-1">
             <div className="flex flex-col md:flex-row items-start md:items-center space-y-1 md:space-y-0 md:space-x-2">
@@ -180,10 +183,10 @@ export function Page() {
         const response = await fetch('https://milharal-news.onrender.com/service/RelevantPotopsts');
         const data = await response.json();
         setPosts(data);
-        setLoading(false); 
+        setLoading(false);
       } catch (error) {
         console.error('Erro ao buscar posts:', error);
-        setLoading(false); 
+        setLoading(false);
       }
     };
 
