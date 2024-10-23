@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -196,7 +195,6 @@ export function Page() {
       <header className="bg-white border-b border-amber-200 p-4 shadow-sm">
         <div className="container mx-auto flex justify-between items-center">
           <Link href="/" className="text-2xl font-bold flex items-center">
-            <Image src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/176400544-fel2RpdX4Aa1vGTUCNYHJEz03Y5LpG.png" alt="Milho News Logo" width={40} height={40} />
             <span className="text-amber-600">Milho</span>
             <span className="text-gray-700">News</span>
           </Link>
