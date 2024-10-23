@@ -74,7 +74,7 @@ function NewsPost({ author, record, replyCount, repostCount, likeCount, uri }: N
                 size="sm"
                 className="flex items-center space-x-2 hover:text-amber-600"
               >
-                <a href={`${url}`} rel="noopener noreferrer">
+               a href={`${url}`} rel="noopener noreferrer">
                   <Heart size={18} />
                   <span>{likeCount}</span>
                 </a>
@@ -136,7 +136,7 @@ function Summary() {
         const data: SummaryData = await response.json();
         const subtopics = data.summary.split('**').reduce((acc, curr, index, array) => {
           if (index % 2 !== 0) {
-            acc.push({ title: curr.tr(), content: array[index + 1]?.tr() || '' });
+            acc.push({ title: curr.trim(), content: array[index + 1]?.trim() || '' });
           }
           return acc;
         }, [] as { title: string, content: string }[]);
@@ -153,7 +153,7 @@ function Summary() {
 
   return (
     <section>
-      <h2 className="text-2xl font-bold mb-4 text-amber-800">Fique por dentro</h2>
+      <h2 className="text-2xl font-bold mb-4 text-amber-800">Resumo</h2>
       {loading ? (
         <Skeleton className="h-20 w-full mb-4" />
       ) : (
@@ -196,6 +196,7 @@ export function Page() {
       <header className="bg-white border-b border-amber-200 p-4 shadow-sm">
         <div className="container mx-auto flex justify-between items-center">
           <Link href="/" className="text-2xl font-bold flex items-center">
+            <Image src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/176400544-fel2RpdX4Aa1vGTUCNYHJEz03Y5LpG.png" alt="Milho News Logo" className="h-10 mr-2" width={40} height={40} />
             <span className="text-amber-600">Milho</span>
             <span className="text-gray-700">News</span>
           </Link>
