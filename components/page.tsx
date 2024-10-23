@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -119,25 +120,6 @@ function NewsPostSkeleton() {
   );
 }
 
-interface SummarizedPost {
-  id: string; 
-  title: string;
-  summary: string;
-  createdAt: string;
-}
-
-function SummarizedPostCard({ post }: { post: SummarizedPost }) {
-  return (
-    <Card className="mb-6 border-amber-200">
-      <CardContent className="pt-4">
-        <h3 className="font-bold text-amber-800">{post.title}</h3>
-        <p className="text-gray-700">{post.summary}</p>
-        <span className="text-gray-500 text-sm">{new Date(post.createdAt).toLocaleString()}</span>
-      </CardContent>
-    </Card>
-  );
-}
-
 interface SummaryData {
   summary: string;
 }
@@ -214,7 +196,7 @@ export function Page() {
       <header className="bg-white border-b border-amber-200 p-4 shadow-sm">
         <div className="container mx-auto flex justify-between items-center">
           <Link href="/" className="text-2xl font-bold flex items-center">
-            <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/176400544-fel2RpdX4Aa1vGTUCNYHJEz03Y5LpG.png" alt="Milho News Logo" className="h-10 mr-2" />
+            <Image src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/176400544-fel2RpdX4Aa1vGTUCNYHJEz03Y5LpG.png" alt="Milho News Logo" className="h-10 mr-2" width={40} height={40} />
             <span className="text-amber-600">Milho</span>
             <span className="text-gray-700">News</span>
           </Link>
