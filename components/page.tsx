@@ -1,35 +1,38 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import Link from 'next/link'
-import { Card, CardContent} from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { MessageCircle, Heart, Share2 } from 'lucide-react'
-import { Skeleton } from "@/components/ui/skeleton"
+import { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { MessageCircle, Heart, Share2 } from 'lucide-react';
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface Author {
-  did: string
-  handle: string
-  displayName: string
-  avatar: string
+  did: string;
+  handle: string;
+  displayName: string;
+  avatar: string;
 }
 
 interface NewsPost {
-  uri: string
-  cid: string
-  author: Author
+  uri: string;
+  cid: string;
+  author: Author;
   record: {
-    createdAt: string
-    text: string
-  }
-  replyCount: number
-  repostCount: number
-  likeCount: number
-  indexedAt: string
+    createdAt: string;
+    text: string;
+  };
+  replyCount: number;
+  repostCount: number;
+  likeCount: number;
+  indexedAt: string;
 }
 
-function NewsPost({ author, record, replyCount, repostCount, likeCount }: NewsPost) {
+function NewsPost({ author, record, replyCount, repostCount, likeCount, uri }: NewsPost) {
+  const id = uri.split('/').pop();
+  const url = `https://bsky.app/profile/${author.handle}/post/${id}`;
+  
   return (
     <Card className="mb-6 hover:bg-amber-50 transition-colors duration-200 border-amber-200">
       <CardContent className="pt-4">
@@ -40,24 +43,51 @@ function NewsPost({ author, record, replyCount, repostCount, likeCount }: NewsPo
           </Avatar>
           <div className="flex-1">
             <div className="flex flex-col md:flex-row items-start md:items-center space-y-1 md:space-y-0 md:space-x-2">
-              <span className="font-bold text-amber-800">{author.displayName}</span>
+              <span className="font-bold text-amber-800">
+                {author.displayName}
+              </span>
               <span className="text-gray-500">@{author.handle}</span>
               <span className="text-gray-500">·</span>
-              <span className="text-gray-500">{new Date(record.createdAt).toLocaleString()}</span>
+              <span className="text-gray-500">
+                {new Date(record.createdAt).toLocaleString()}
+              </span>
             </div>
-            <p className="mt-2 text-gray-700 text-sm md:text-base">{record.text}</p>
+            <p className="mt-2 text-gray-700 text-sm md:text-base">
+              {record.text}
+            </p>
             <div className="flex justify-between mt-4 text-gray-500">
-              <Button variant="ghost" size="sm" className="flex items-center space-x-2 hover:text-amber-600">
-                <MessageCircle size={18} />
-                <span>{replyCount}</span>
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="flex items-center space-x-2 hover:text-amber-600"
+              >
+                <a href={`${url}`} rel="noopener noreferrer">
+                  <MessageCircle size={18} />
+                  <span>{replyCount}</span>
+                </a>
               </Button>
-              <Button variant="ghost" size="sm" className="flex items-center space-x-2 hover:text-amber-600">
-                <Heart size={18} />
-                <span>{likeCount}</span>
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="flex items-center space-x-2 hover:text-amber-600"
+              >
+                <a href={`${url}`} rel="noopener noreferrer">
+                  <Heart size={18} />
+                  <span>{likeCount}</span>
+                </a>
               </Button>
-              <Button variant="ghost" size="sm" className="flex items-center space-x-2 hover:text-amber-600">
-                <Share2 size={18} />
-                <span>{repostCount}</span>
+              <Button
+                asChild
+                variant="ghost"
+                size="sm"
+                className="flex items-center space-x-2 hover:text-amber-600"
+              >
+                <a href={`${url}`} rel="noopener noreferrer">
+                  <Share2 size={18} />
+                  <span>{repostCount}</span>
+                </a>
               </Button>
             </div>
           </div>
@@ -86,29 +116,98 @@ function NewsPostSkeleton() {
         </div>
       </CardContent>
     </Card>
-  )
+  );
+}
+
+interface SummarizedPost {
+  id: string; 
+  title: string;
+  summary: string;
+  createdAt: string;
+}
+
+function SummarizedPostCard({ post }: { post: SummarizedPost }) {
+  return (
+    <Card className="mb-6 border-amber-200">
+      <CardContent className="pt-4">
+        <h3 className="font-bold text-amber-800">{post.title}</h3>
+        <p className="text-gray-700">{post.summary}</p>
+        <span className="text-gray-500 text-sm">{new Date(post.createdAt).toLocaleString()}</span>
+      </CardContent>
+    </Card>
+  );
+}
+
+interface SummaryData {
+  summary: string;
+}
+
+function Summary() {
+  const [subtopics, setSubtopics] = useState<{ title: string, content: string }[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSummary = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('https://clientgemini.onrender.com/summarize_posts');
+        const data: SummaryData = await response.json();
+        const subtopics = data.summary.split('**').reduce((acc, curr, index, array) => {
+          if (index % 2 !== 0) {
+            acc.push({ title: curr.trim(), content: array[index + 1]?.trim() || '' });
+          }
+          return acc;
+        }, [] as { title: string, content: string }[]);
+        setSubtopics(subtopics);
+      } catch (error) {
+        console.error('Erro ao buscar resumo:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSummary();
+  }, []);
+
+  return (
+    <section>
+      <h2 className="text-2xl font-bold mb-4 text-amber-800">Fique por dentro</h2>
+      {loading ? (
+        <Skeleton className="h-20 w-full mb-4" />
+      ) : (
+        subtopics.map((subtopic, index) => (
+          <Card key={index} className="mb-6 border-amber-200">
+            <CardContent className="pt-4">
+              <h3 className="font-bold text-amber-800 mb-2">{subtopic.title}</h3>
+              <p className="text-gray-700">{subtopic.content}</p>
+            </CardContent>
+          </Card>
+        ))
+      )}
+    </section>
+  );
 }
 
 export function Page() {
-  const [posts, setPosts] = useState<NewsPost[]>([])
-  const [loading, setLoading] = useState(true)
+  const [posts, setPosts] = useState<NewsPost[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        setLoading(true)
-        const response = await fetch('https://milharal-news.onrender.com/service/RelevantPotopsts')
-        const data = await response.json()
-        setPosts(data)
+        setLoading(true);
+        const response = await fetch('https://milharal-news.onrender.com/service/RelevantPotopsts');
+        const data = await response.json();
+        setPosts(data);
+        setLoading(false); 
       } catch (error) {
-        console.error('Erro ao buscar posts:', error)
-      } finally {
-        setLoading(false)
+        console.error('Erro ao buscar posts:', error);
+        setLoading(false); 
       }
-    }
+    };
 
-    fetchPosts()
-  }, [])
+    fetchPosts();
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col bg-amber-50 text-gray-800">
@@ -149,6 +248,10 @@ export function Page() {
               )}
             </section>
           </div>
+
+          <div className="lg:w-1/3">
+            <Summary />
+          </div>
         </div>
       </main>
 
@@ -158,7 +261,8 @@ export function Page() {
             <div className="w-full md:w-1/3 mb-4 md:mb-0">
               <h3 className="text-xl font-bold mb-2 text-amber-800">Sobre o Milho News</h3>
               <p className="text-sm">
-              Milho News é o seu site diário de notícias e atualizações do mundo do desenvolvimento de software. Aqui, você encontra os posts mais legais do Bluesky, com tudo que envolve TI: novidades, curiosidades, brincadeiras e até memes! Fique ligado nas tendências e nas conversas que agitam a comunidade tech, seja você um dev, um entusiasta ou só alguém curioso!.</p>
+                Milho News é o seu site diário de notícias e atualizações do mundo do desenvolvimento de software. Aqui, você encontra os posts mais legais do Bluesky, com tudo que envolve TI: novidades, curiosidades, brincadeiras e até memes! Fique ligado nas tendências e nas conversas que agitam a comunidade tech, seja você um dev, um entusiasta ou só alguém curioso!
+              </p>
             </div>
           </div>
           <div className="mt-8 text-center text-sm">
@@ -167,5 +271,5 @@ export function Page() {
         </div>
       </footer>
     </div>
-  )
+  );
 }
