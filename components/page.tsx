@@ -187,7 +187,7 @@ export default function Component() {
   const fetchPosts = useCallback(async () => {
     try {
       setLoading(true)
-      const response = await fetch('https://milharal-news.onrender.com/service/RelevantPotopsts')
+      const response = await fetch('https://milharal-news.onrender.com/service/RelevantPosts')
       const data = await response.json()
       setPosts(data)
       setFilteredPosts(data)
