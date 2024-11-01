@@ -27,12 +27,6 @@ function Summary() {
   useEffect(() => {
     const fetchSummary = async () => {
       try {
-        const storedSummary = localStorage.getItem('summary');
-        if (storedSummary) {
-          setSubtopics(JSON.parse(storedSummary));
-          setLoading(false);
-          return;
-        }
         setLoading(true);
         const response = await fetch('https://clientgemini.onrender.com/summarize_posts');
         const data: SummaryData = await response.json();
@@ -45,7 +39,6 @@ function Summary() {
         }, [] as { title: string; content: string }[]);
 
         setSubtopics(subtopics);
-        localStorage.setItem('summary', JSON.stringify(subtopics));
       } catch (error) {
         console.error('Erro ao buscar resumo:', error);
       } finally {
@@ -65,13 +58,13 @@ function Summary() {
           <div key={index} className="mb-6 sm:mb-8">
             <h3 className="font-semibold text-foreground mb-2 text-lg sm:text-xl">{subtopic.title}</h3>
             <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">{subtopic.content}</p>
-
           </div>
         ))
       )}
     </section>
   );
 }
+
 export default function Component() {
 
   const [searchTerm, setSearchTerm] = useState('')
