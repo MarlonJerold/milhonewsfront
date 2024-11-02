@@ -147,7 +147,7 @@ export default function PostsPage() {
   const fetchPosts = useCallback(async () => {
     try {
       setLoading(true)
-      const response = await fetch('https://milharal-news.onrender.com/post/opportunity')
+      const response = await fetch('https://milharal-news.onrender.com/post/github')
       const data = await response.json()
       if (Array.isArray(data)) {
         setPosts(data)
