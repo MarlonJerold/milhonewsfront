@@ -17,6 +17,7 @@ interface SummaryData {
 const menuItems = [
   { name: 'Notícias', href: '/' },
   { name: 'Posts Bluesky', href: '/posts' },
+  { name: 'Milho IA', href: '/mensagem' },
   { name: 'Oportunidades', href: '/opportunity' },
   { name: 'Open Source', href: '/opensource' }
 ]

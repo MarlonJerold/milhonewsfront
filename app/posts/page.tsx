@@ -34,10 +34,13 @@ interface NewsPost {
 }
 
 const menuItems = [
-    { name: 'Notícias', href: '/' },
-    { name: 'Posts Bluesky', href: '/posts' },
-    { name: 'Oportunidades', href: '/opportunity' }
-  ]
+  { name: 'Notícias', href: '/' },
+  { name: 'Posts Bluesky', href: '/posts' },
+  { name: 'Milho IA', href: '/mensagem' },
+  { name: 'Oportunidades', href: '/opportunity' },
+  { name: 'Open Source', href: '/opensource' }
+]
+
 
 function NewsPost({ author, record, replyCount, repostCount, likeCount, uri }: NewsPost) {
     const id = uri.split('/').pop()
